@@ -24,22 +24,25 @@ let score = 0;
 
 // control the snake 
 let d;
+let acted = false;
 document.addEventListener("keydown", direction);
 
 function direction(event) {
-    switch(event.keyCode) {
-        case 37: 
-            if(d!="RIGHT") d="LEFT";
-            break;
-        case 38:
-            if(d!="DOWN") d="UP";
-            break;
-        case 39:
-            if(d!="LEFT") d="RIGHT";
-            break;
-        case 40:
-            if(d!="UP") d="DOWN";
-            break;
+    if(!acted){
+        switch(event.keyCode) {
+            case 37: 
+                if(d!="RIGHT") {d="LEFT"; acted = true;}
+                break;
+            case 38:
+                if(d!="DOWN") {d="UP"; acted = true;}
+                break;
+            case 39:
+                if(d!="LEFT") {d="RIGHT"; acted = true;}
+                break;
+            case 40:
+                if(d!="UP") {d="DOWN"; acted = true;}
+                break;
+    }
     }
 }
 
@@ -53,10 +56,13 @@ function collision(head, array) {
 }
 // draw game on canvas
 function draw() {
-    ctx.drawImage(ground, 0, 0);
+    //ctx.drawImage(ground, 0, 0);
+    ctx.fillStyle = "grey";
+    ctx.fillRect(0, 0, 19*box, 19*box);
+    acted = false;
     // draw snake
     for(let i=0; i<snake.length; i++){
-        ctx.fillStyle = /*( i==0 )?"green" :*/ "white";
+        ctx.fillStyle = ( i==0 )?"blue" : "white";
         ctx.fillRect(snake[i].x, snake[i].y, box, box);
 
         ctx.strokeStyle="black";
@@ -95,15 +101,15 @@ function draw() {
     }
     
     // game over conditions
-    if(snakeX < box || snakeX > 17*box || snakeY < 3*box || snakeY > 17*box || collision(newHead, snake)) {
+    if(snakeX < 0 || snakeX > 18*box || snakeY < 0*box || snakeY > 18*box || collision(newHead, snake)) {
         clearInterval(game);
     }
 
     snake.unshift(newHead);
 
     // draw score
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "red";
     ctx.font="45px Changa One";
-    ctx.fillText(score, 2*box, 1.6*box);
+    ctx.fillText(score, 0.8*box, 1.6*box);
 }
-let game = setInterval(draw, 75);
+let game = setInterval(draw, 100);
